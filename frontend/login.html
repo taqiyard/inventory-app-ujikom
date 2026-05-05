@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Inventaris Peralatan Kantor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #1E1E1E;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            background: #252526;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #3C3C3C;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: #4FC3F7;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #C5C5C5;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            background: #2D2D30;
+            border: 1px solid #3C3C3C;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 14px;
+            color: #E4E4E4;
+        }
+        
+        .form-control:focus {
+            background: #2D2D30;
+            border-color: #4FC3F7;
+            box-shadow: 0 0 0 0.2rem rgba(79, 195, 247, 0.25);
+            color: #E4E4E4;
+        }
+        
+        .form-label {
+            color: #E4E4E4;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .btn-login {
+            background: #4FC3F7;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            color: #1E1E1E;
+        }
+        
+        .btn-login:hover {
+            background: #29B6F6;
+            color: #1E1E1E;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1><i class="bi bi-inbox"></i> Inventaris</h1>
+            <p>Sistem Manajemen Peralatan Kantor</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login">Masuk</button>
+        </form>
+
+        <hr class="my-3">
+        <p class="text-center text-muted small">© 2026 Sistem Inventaris</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store token and user info
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // Redirect to dashboard
+                    window.location.href = 'index.html';
+                } else {
+                    alert(data.message || 'Login gagal');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat login');
+            }
+        });
+    </script>
+</body>
+
+</html>

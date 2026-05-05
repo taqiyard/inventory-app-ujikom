@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminjaman Barang - Inventaris Peralatan Kantor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        body {
+            background-color: #1E1E1E;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #E4E4E4;
+        }
+        
+        .navbar-custom {
+            background: #252526;
+            border-bottom: 1px solid #3C3C3C;
+        }
+        
+        .navbar-brand {
+            color: #4FC3F7 !important;
+        }
+        
+        .nav-link {
+            color: #C5C5C5 !important;
+        }
+        
+        .nav-link:hover {
+            color: #4FC3F7 !important;
+        }
+        
+        .sidebar {
+            background: #252526;
+            min-height: 100vh;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 250px;
+            border-right: 1px solid #3C3C3C;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            margin-top: 60px;
+            padding: 30px;
+        }
+        
+        .main-content h1 {
+            color: #E4E4E4;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 15px 20px;
+            color: #C5C5C5;
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background-color: #2D2D30;
+            border-left-color: #4FC3F7;
+            color: #4FC3F7;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-menunggu {
+            background-color: rgba(255, 167, 38, 0.2);
+            color: #FFA726;
+        }
+        
+        .status-disetujui {
+            background-color: rgba(102, 187, 106, 0.2);
+            color: #66BB6A;
+        }
+        
+        .status-ditolak {
+            background-color: rgba(239, 83, 80, 0.2);
+            color: #EF5350;
+        }
+        
+        .status-dikembalikan {
+            background-color: rgba(79, 195, 247, 0.2);
+            color: #4FC3F7;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #C5C5C5;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: #4FC3F7;
+            color: #1E1E1E;
+            border: none;
+        }
+        
+        .card {
+            background: #252526;
+            border: 1px solid #3C3C3C;
+            color: #E4E4E4;
+        }
+        
+        .card-header {
+            background: #2D2D30;
+            border-bottom: 1px solid #3C3C3C;
+        }
+        
+        .form-control {
+            background: #2D2D30;
+            border: 1px solid #3C3C3C;
+            color: #E4E4E4;
+        }
+        
+        .form-control:focus {
+            background: #2D2D30;
+            border-color: #4FC3F7;
+            color: #E4E4E4;
+        }
+        
+        .form-label {
+            color: #E4E4E4;
+        }
+        
+        .table {
+            border-color: #3C3C3C;
+            --bs-table-color: #E4E4E4;
+            --bs-table-bg: transparent;
+            --bs-table-hover-color: #E4E4E4;
+            --bs-table-hover-bg: #3C3C3C;
+            --bs-table-striped-color: #E4E4E4;
+            --bs-table-striped-bg: #2D2D30;
+            --bs-table-border-color: #3C3C3C;
+        }
+        
+        .table tbody td {
+            color: #E4E4E4 !important;
+            border-color: #3C3C3C;
+        }
+        
+        .table tbody tr:hover td {
+            color: #E4E4E4 !important;
+            background-color: #3C3C3C;
+        }
+        
+        .table thead.table-dark {
+            background-color: #2D2D30;
+            /* Darker header for better contrast */
+            color: #E4E4E4;
+        }
+        
+        .table thead.table-dark th {
+            border-color: #3C3C3C;
+            padding: 12px 15px;
+            /* Adjust padding for headers */
+        }
+        
+        .btn-primary {
+            background: #4FC3F7;
+            border: none;
+            color: #1E1E1E;
+        }
+        
+        .btn-primary:hover {
+            background: #29B6F6;
+            color: #1E1E1E;
+        }
+        
+        .btn-success {
+            background: #66BB6A;
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background: #56A862;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-inbox"></i> Inventaris Kantor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profil.html">
+                            <i class="bi bi-person"></i> Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="index.html">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li id="menuBarang" style="display:none;">
+                        <a href="barang.html">
+                            <i class="bi bi-box"></i> Manajemen Barang
+                        </a>
+                    </li>
+                    <li>
+                        <a href="peminjaman.html" class="active">
+                            <i class="bi bi-arrow-left-right"></i> Peminjaman Barang
+                        </a>
+                    </li>
+                    <li id="menuLaporan" style="display:none;">
+                        <a href="laporan.html">
+                            <i class="bi bi-bar-chart"></i> Laporan
+                        </a>
+                    </li>
+                    <li id="menuLog" style="display:none;">
+                        <a href="log-aktivitas.html">
+                            <i class="bi bi-clock-history"></i> Log Aktivitas
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="mb-4">Peminjaman Barang</h1>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-ajukan" data-bs-toggle="tab" data-bs-target="#ajukan">
+                                <i class="bi bi-plus-circle"></i> Ajukan Peminjaman
+                            </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-riwayat" data-bs-toggle="tab" data-bs-target="#riwayat">
+                                <i class="bi bi-clock-history"></i> Riwayat Peminjaman
+                            </button>
+                </li>
+                <li class="nav-item" id="tab-persetujuan-li" style="display:none;" role="presentation">
+                    <button class="nav-link" id="tab-persetujuan" data-bs-toggle="tab" data-bs-target="#persetujuan">
+                                <i class="bi bi-check-circle"></i> Persetujuan Peminjaman
+                            </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Ajukan Peminjaman -->
+                <div class="tab-pane fade show active" id="ajukan">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="formPeminjaman">
+                                <div class="mb-3">
+                                    <label for="tglPinjam" class="form-label">Tanggal Peminjaman</label>
+                                    <input type="date" class="form-control" id="tglPinjam" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="tglKembali" class="form-label">Tanggal Kembali yang Direncanakan</label>
+                                    <input type="date" class="form-control" id="tglKembali" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="keterangan" class="form-label">Keterangan</label>
+                                    <textarea class="form-control" id="keterangan" rows="3" placeholder="Jelaskan keperluan peminjaman..."></textarea>
+                                </div>
+
+                                <h5 class="mt-4 mb-3">Pilih Barang</h5>
+                                <div id="daftarBarang"></div>
+
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                                <i class="bi bi-check"></i> Ajukan Peminjaman
+                                            </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Riwayat Peminjaman -->
+                <div class="tab-pane fade" id="riwayat">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Tanggal Pinjam</th>
+                                        <th>Tanggal Kembali</th>
+                                        <th>Barang</th>
+                                        <th>Jumlah</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="riwayatTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">Memuat data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persetujuan Peminjaman (Petugas/Admin Only) -->
+                <div class="tab-pane fade" id="persetujuan">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nama Peminjam</th>
+                                        <th>Tanggal Pinjam</th>
+                                        <th>Barang</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="persetujuanTableBody">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">Memuat data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Modal Persetujuan -->
+    <div class="modal fade" id="persetujuanModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Setujui Peminjaman</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="formPersetujuan">
+                    <div class="modal-body">
+                        <p id="detailPeminjaman"></p>
+                        <div class="mb-3">
+                            <label for="statusPersetujuan" class="form-label">Status</label>
+                            <select class="form-select" id="statusPersetujuan" required>
+                                <option value="">Pilih Status</option>
+                                <option value="disetujui">Setujui</option>
+                                <option value="ditolak">Tolak</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="catatanPersetujuan" class="form-label">Catatan</label>
+                            <textarea class="form-control" id="catatanPersetujuan" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        // Show persetujuan tab for petugas and admin
+        if (user.role === 'petugas' || user.role === 'admin') {
+            document.getElementById('tab-persetujuan-li').style.display = 'block';
+            document.getElementById('menuBarang').style.display = 'block';
+            document.getElementById('menuLaporan').style.display = 'block';
+        }
+
+        if (user.role === 'admin') {
+            document.getElementById('menuLog').style.display = 'block';
+        }
+
+        // Load barang list
+        async function loadBarang() {
+            try {
+                const response = await fetch('http://localhost:3000/api/barang', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                displayDaftarBarang(data);
+            } catch (error) {
+                console.error('Error loading barang:', error);
+            }
+        }
+
+        function displayDaftarBarang(data) {
+            let html = '';
+            data.forEach(barang => {
+                if (barang.jumlah_tersedia > 0) {
+                    html += `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-7">
+                                        <h6>${barang.nama_barang}</h6>
+                                        <small class="text-muted">Tersedia: ${barang.jumlah_tersedia}</small>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="input-group input-group-sm">
+                                            <input type="hidden" value="${barang.id}" class="barang-id">
+                                            <input type="number" class="form-control jumlah-input" min="1" max="${barang.jumlah_tersedia}" placeholder="Jumlah">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('daftarBarang').innerHTML = html;
+        }
+
+        // Load riwayat peminjaman
+        async function loadRiwayat() {
+            try {
+                const response = await fetch('http://localhost:3000/api/peminjaman', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                displayRiwayat(data);
+            } catch (error) {
+                console.error('Error loading riwayat:', error);
+            }
+        }
+
+        function displayRiwayat(data) {
+            let html = '';
+            data.forEach(peminjaman => {
+                        const statusClass = 'status-' + peminjaman.status;
+                        html += `
+                    <tr>
+                        <td>${peminjaman.tanggal_pinjam}</td>
+                        <td>${peminjaman.tanggal_kembali}</td>
+                        <td>${peminjaman.barang_nama}</td>
+                        <td>${peminjaman.jumlah}</td>
+                        <td><span class="status-badge ${statusClass}">${peminjaman.status}</span></td>
+                        <td>
+                            ${peminjaman.status === 'disetujui' ? `
+                                <button class="btn btn-sm btn-success" onclick="kembalikanBarang(${peminjaman.id})">
+                                    <i class="bi bi-check"></i> Kembalikan
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (data.length === 0) {
+                html = '<tr><td colspan="6" class="text-center text-muted">Belum ada peminjaman</td></tr>';
+            }
+
+            document.getElementById('riwayatTableBody').innerHTML = html;
+        }
+
+        // Handle Pengajuan
+        document.getElementById('formPeminjaman').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const barang = [];
+            document.querySelectorAll('.card-body').forEach(card => {
+                const id = card.querySelector('.barang-id')?.value;
+                const jumlah = card.querySelector('.jumlah-input')?.value;
+                if (id && jumlah > 0) barang.push({ id, jumlah });
+            });
+
+            if (barang.length === 0) return alert('Pilih minimal satu barang');
+
+            const data = {
+                tanggal_pinjam: document.getElementById('tglPinjam').value,
+                tanggal_kembali: document.getElementById('tglKembali').value,
+                keterangan: document.getElementById('keterangan').value,
+                barang
+            };
+
+            const response = await fetch('http://localhost:3000/api/peminjaman', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Peminjaman diajukan');
+                location.reload();
+            }
+        });
+
+        // Load Persetujuan (Petugas/Admin)
+        async function loadPersetujuan() {
+            if (user.role === 'staf') return;
+            const response = await fetch('http://localhost:3000/api/peminjaman', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            let html = '';
+            data.filter(p => p.status === 'menunggu').forEach(p => {
+                html += `
+                    <tr>
+                        <td>${p.user_name}</td>
+                        <td>${p.tanggal_pinjam}</td>
+                        <td>${p.barang_nama} (${p.jumlah})</td>
+                        <td><span class="status-badge status-menunggu">${p.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="updateStatus(${p.id}, 'approve')">Setujui</button>
+                            <button class="btn btn-sm btn-danger" onclick="updateStatus(${p.id}, 'tolak')">Tolak</button>
+                        </td>
+                    </tr>`;
+            });
+            document.getElementById('persetujuanTableBody').innerHTML = html || '<tr><td colspan="5" class="text-center">Kosong</td></tr>';
+        }
+
+        async function updateStatus(id, action) {
+            await fetch(`http://localhost:3000/api/peminjaman/${id}/${action}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            loadPersetujuan();
+            loadRiwayat();
+        }
+
+        async function kembalikanBarang(id) {
+            await updateStatus(id, 'kembalikan');
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Initialize
+        loadBarang();
+        loadRiwayat();
+        loadPersetujuan();
+    </script>
+</body>
+
+</html>

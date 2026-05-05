@@ -1,0 +1,165 @@
+:root {
+    --color-bg-main: #1E1E1E;
+    --color-bg-card: #252526;
+    --color-bg-hover: #2D2D30;
+    --color-text-main: #E4E4E4;
+    --color-text-secondary: #C5C5C5;
+    --color-primary: #4FC3F7;
+    --color-success: #66BB6A;
+    --color-warning: #FFA726;
+    --color-danger: #EF5350;
+    --color-border: #3C3C3C;
+}
+
+body {
+    background-color: var(--color-bg-main);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-text-main);
+}
+
+
+/* Navbar */
+
+.navbar-custom {
+    background: var(--color-bg-card);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.navbar-brand {
+    color: var(--color-primary) !important;
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    background: var(--color-bg-card);
+    min-height: 100vh;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 250px;
+    border-right: 1px solid var(--color-border);
+    z-index: 1000;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 15px 20px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition: all 0.3s;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background-color: var(--color-bg-hover);
+    border-left-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+
+/* Main Content */
+
+.main-content {
+    margin-left: 250px;
+    margin-top: 80px;
+    padding: 20px;
+}
+
+
+/* Cards */
+
+.card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-main);
+    border-radius: 10px;
+}
+
+.card-header {
+    background: var(--color-bg-hover);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-primary);
+}
+
+.stat-card i {
+    font-size: 2.5rem;
+    opacity: 0.3;
+}
+
+
+/* Buttons */
+
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #1E1E1E;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #29B6F6;
+    border-color: #29B6F6;
+}
+
+
+/* Tables */
+
+.table {
+    color: var(--color-text-main);
+    --bs-table-color: var(--color-text-main);
+    --bs-table-bg: transparent;
+    --bs-table-hover-color: var(--color-text-main);
+    --bs-table-hover-bg: var(--color-bg-hover);
+    --bs-table-striped-color: var(--color-text-main);
+    --bs-table-striped-bg: var(--color-bg-hover);
+    --bs-table-border-color: var(--color-border);
+    --bs-table-active-color: var(--color-text-main);
+    --bs-table-active-bg: var(--color-bg-hover);
+}
+
+.table-light {
+    background: var(--color-bg-hover);
+    --bs-table-color: var(--color-text-main);
+    --bs-table-bg: var(--color-bg-hover);
+    --bs-table-border-color: var(--color-border);
+}
+
+.table thead {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table td,
+.table th {
+    border-color: var(--color-border);
+    color: var(--color-text-main);
+}
+
+.table-hover tbody tr:hover {
+    background: var(--color-bg-hover);
+}
+
+.form-control,
+.form-select {
+    background-color: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-main);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--color-bg-hover);
+    border-color: var(--color-primary);
+    color: var(--color-text-main);
+    box-shadow: 0 0 0 0.25rem rgba(79, 195, 247, 0.25);
+}

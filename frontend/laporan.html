@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan - Inventaris Peralatan Kantor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #1E1E1E;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #E4E4E4;
+        }
+        
+        .navbar-custom {
+            background: #252526;
+            border-bottom: 1px solid #3C3C3C;
+        }
+        
+        .sidebar {
+            background: #252526;
+            min-height: 100vh;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 250px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            margin-top: 60px;
+            padding: 30px;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 15px 20px;
+            color: #C5C5C5;
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background-color: #2D2D30;
+            border-left-color: #4FC3F7;
+            color: #4FC3F7;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 40px;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #C5C5C5;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: #4FC3F7;
+            color: #1E1E1E;
+            border: none;
+        }
+        
+        .table {
+            border-color: #3C3C3C;
+            --bs-table-color: #E4E4E4;
+            --bs-table-bg: transparent;
+            --bs-table-hover-color: #E4E4E4;
+            --bs-table-hover-bg: #3C3C3C;
+            --bs-table-striped-color: #E4E4E4;
+            --bs-table-striped-bg: #2D2D30;
+            --bs-table-border-color: #3C3C3C;
+        }
+        
+        .table tbody td {
+            color: #E4E4E4 !important;
+            border-color: #3C3C3C;
+        }
+        
+        .table tbody tr:hover td {
+            color: #E4E4E4 !important;
+            background-color: #3C3C3C;
+        }
+        
+        .table thead.table-dark {
+            background-color: #2D2D30;
+            /* Darker header for better contrast */
+            color: #E4E4E4;
+        }
+        
+        .table thead.table-dark th {
+            border-color: #3C3C3C;
+            padding: 12px 15px;
+            /* Adjust padding for headers */
+        }
+        
+        .table thead.table-dark {
+            background-color: #2D2D30;
+            border-bottom: 2px solid #3C3C3C;
+        }
+        
+        .table thead th {
+            color: #4FC3F7 !important;
+            /* Warna biru cerah agar header terlihat jelas */
+            background-color: #2D2D30 !important;
+            border-color: #3C3C3C;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-inbox"></i> Inventaris Kantor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profil.html">
+                            <i class="bi bi-person"></i> Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="index.html">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="barang.html">
+                            <i class="bi bi-box"></i> Manajemen Barang
+                        </a>
+                    </li>
+                    <li>
+                        <a href="peminjaman.html">
+                            <i class="bi bi-arrow-left-right"></i> Peminjaman Barang
+                        </a>
+                    </li>
+                    <li>
+                        <a href="laporan.html" class="active">
+                            <i class="bi bi-bar-chart"></i> Laporan
+                        </a>
+                    </li>
+                    <li id="menuLog" style="display:none;">
+                        <a href="log-aktivitas.html">
+                            <i class="bi bi-clock-history"></i> Log Aktivitas
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="mb-4">Laporan</h1>
+
+            <!-- Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label">Dari Tanggal</label>
+                            <input type="date" class="form-control" id="startDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label">Hingga Tanggal</label>
+                            <input type="date" class="form-control" id="endDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary w-100" onclick="filterLaporan()">
+                                        <i class="bi bi-search"></i> Filter
+                                    </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-inventaris" data-bs-toggle="tab" data-bs-target="#inventaris">
+                                <i class="bi bi-box"></i> Inventaris
+                            </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-peminjaman" data-bs-toggle="tab" data-bs-target="#peminjaman">
+                                <i class="bi bi-arrow-left-right"></i> Peminjaman
+                            </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Laporan Inventaris -->
+                <div class="tab-pane fade show active" id="inventaris">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Status Barang</h6>
+                                    <div class="chart-container">
+                                        <canvas id="statusChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Barang per Kategori</h6>
+                                    <div class="chart-container">
+                                        <canvas id="kategoriChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-dark">
+                            <h5 class="mb-0">Detail Inventaris</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama Barang</th>
+                                        <th>Kategori</th>
+                                        <th>Total</th>
+                                        <th>Tersedia</th>
+                                        <th>Dipinjam</th>
+                                        <th>Rusak</th>
+                                        <th>Lokasi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventarisTableBody">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">Memuat data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Laporan Peminjaman -->
+                <div class="tab-pane fade" id="peminjaman">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title">Status Peminjaman</h6>
+                            <div class="chart-container">
+                                <canvas id="peminjamanStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-dark">
+                            <h5 class="mb-0">Detail Peminjaman</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nama Peminjam</th>
+                                        <th>Barang</th>
+                                        <th>Jumlah</th>
+                                        <th>Tanggal Pinjam</th>
+                                        <th>Tanggal Kembali</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="peminjamanTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">Memuat data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button Export -->
+            <div class="mt-4">
+                <button class="btn btn-success" onclick="exportPDF()">
+                            <i class="bi bi-file-pdf"></i> Export PDF
+                        </button>
+                <button class="btn btn-info" onclick="printLaporan()">
+                            <i class="bi bi-printer"></i> Print
+                        </button>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        if (user.role === 'admin') {
+            document.getElementById('menuLog').style.display = 'block';
+        }
+
+        let statusChart, kategoriChart, peminjamanStatusChart;
+
+        // Load inventaris data
+        async function loadInventaris() {
+            try {
+                const response = await fetch('http://localhost:3000/api/barang', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                displayInventaris(data);
+                updateStatusChart(data);
+                updateKategoriChart(data);
+            } catch (error) {
+                console.error('Error loading inventaris:', error);
+            }
+        }
+
+        function displayInventaris(data) {
+            let html = '';
+            data.forEach(barang => {
+                const jumlahDipinjam = barang.jumlah_total - barang.jumlah_tersedia;
+                html += `
+                    <tr>
+                        <td>${barang.nama_barang}</td>
+                        <td>${barang.kategori}</td>
+                        <td>${barang.jumlah_total}</td>
+                        <td>${barang.jumlah_tersedia}</td>
+                        <td>${jumlahDipinjam}</td>
+                        <td><span class="badge bg-danger">0</span></td>
+                        <td>${barang.lokasi}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('inventarisTableBody').innerHTML = html;
+        }
+
+        function updateStatusChart(data) {
+            const tersedia = data.reduce((sum, b) => sum + b.jumlah_tersedia, 0);
+            const dipinjam = data.reduce((sum, b) => sum + (b.jumlah_total - b.jumlah_tersedia), 0);
+
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tersedia', 'Dipinjam'],
+                    datasets: [{
+                        data: [tersedia, dipinjam],
+                        backgroundColor: ['#28a745', '#ffc107']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateKategoriChart(data) {
+            const kategoriMap = {};
+            data.forEach(barang => {
+                if (!kategoriMap[barang.kategori]) {
+                    kategoriMap[barang.kategori] = 0;
+                }
+                kategoriMap[barang.kategori] += barang.jumlah_total;
+            });
+
+            const ctx = document.getElementById('kategoriChart').getContext('2d');
+            kategoriChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(kategoriMap),
+                    datasets: [{
+                        label: 'Jumlah Barang',
+                        data: Object.values(kategoriMap),
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Load peminjaman data
+        async function loadPeminjaman() {
+            try {
+                const response = await fetch('http://localhost:3000/api/peminjaman', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                displayPeminjaman(data);
+                updatePeminjamanChart(data);
+            } catch (error) {
+                console.error('Error loading peminjaman:', error);
+            }
+        }
+
+        function displayPeminjaman(data) {
+            let html = '';
+            data.forEach(peminjaman => {
+                html += `
+                    <tr>
+                        <td>${peminjaman.user_name}</td>
+                        <td>${peminjaman.barang_nama}</td>
+                        <td>${peminjaman.jumlah}</td>
+                        <td>${peminjaman.tanggal_pinjam}</td>
+                        <td>${peminjaman.tanggal_kembali}</td>
+                        <td><span class="badge bg-info">${peminjaman.status}</span></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('peminjamanTableBody').innerHTML = html;
+        }
+
+        function updatePeminjamanChart(data) {
+            const statusMap = {};
+            data.forEach(peminjaman => {
+                if (!statusMap[peminjaman.status]) {
+                    statusMap[peminjaman.status] = 0;
+                }
+                statusMap[peminjaman.status]++;
+            });
+
+            const ctx = document.getElementById('peminjamanStatusChart').getContext('2d');
+            peminjamanStatusChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(statusMap),
+                    datasets: [{
+                        data: Object.values(statusMap),
+                        backgroundColor: ['#ffc107', '#28a745', '#dc3545', '#17a2b8']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function filterLaporan() {
+            loadInventaris();
+            loadPeminjaman();
+        }
+
+        function exportPDF() {
+            alert('Fungsi export PDF akan diimplementasikan');
+        }
+
+        function printLaporan() {
+            window.print();
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Initialize
+        loadInventaris();
+        loadPeminjaman();
+    </script>
+</body>
+
+</html>
