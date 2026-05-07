@@ -173,6 +173,48 @@
             border: none;
             color: white;
         }
+        /* Modal Dark */
+        
+        .modal-content {
+            background: #252526;
+            border: 1px solid #3C3C3C;
+            color: #E4E4E4;
+        }
+        
+        .modal-header {
+            background: #2D2D30;
+            border-bottom: 1px solid #3C3C3C;
+        }
+        
+        .modal-footer {
+            background: #2D2D30;
+            border-top: 1px solid #3C3C3C;
+        }
+        /* Form Select Dark */
+        
+        .form-select {
+            background-color: #2D2D30;
+            border: 1px solid #3C3C3C;
+            color: #E4E4E4;
+        }
+        
+        .form-select:focus {
+            background-color: #2D2D30;
+            border-color: #4FC3F7;
+            color: #E4E4E4;
+            box-shadow: 0 0 0 0.2rem rgba(79, 195, 247, 0.25);
+        }
+        /* Penting: override warna option di dropdown */
+        
+        .form-select option {
+            background-color: #2D2D30;
+            color: #E4E4E4;
+        }
+        /* btn-close agar terlihat di dark background */
+        
+        .btn-close {
+            filter: invert(1);
+        }
     </style>
 </head>
 
@@ -233,6 +275,7 @@
                             <i class="bi bi-clock-history"></i> Log Aktivitas
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -355,6 +398,11 @@
 
         if (!token) {
             window.location.href = 'login.html';
+        }
+
+        // Tampilkan menu Log Aktivitas jika user adalah admin
+        if (user && user.role === 'admin') {
+            document.getElementById('menuLog').style.display = 'block';
         }
 
         // Load barang data
