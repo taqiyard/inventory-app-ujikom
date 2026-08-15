@@ -511,14 +511,24 @@
         // Handle Pengajuan
         document.getElementById('formPeminjaman').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            // Nonaktifkan tombol agar tidak diklik dua kali
+            submitBtn.disabled = true;
+
             const barang = [];
-            document.querySelectorAll('.card-body').forEach(card => {
+            // Gunakan selektor yang lebih spesifik agar tidak mengambil kontainer induk
+            document.querySelectorAll('#daftarBarang .card-body').forEach(card => {
                 const id = card.querySelector('.barang-id')?.value;
                 const jumlah = card.querySelector('.jumlah-input')?.value;
                 if (id && jumlah > 0) barang.push({ id, jumlah });
             });
 
-            if (barang.length === 0) return alert('Pilih minimal satu barang');
+            if (barang.length === 0) {
+                alert('Pilih minimal satu barang');
+                submitBtn.disabled = false;
+                return;
+            }
 
             const data = {
                 tanggal_pinjam: document.getElementById('tglPinjam').value,
@@ -536,6 +546,9 @@
             if (response.ok) {
                 alert('Peminjaman diajukan');
                 location.reload();
+            } else {
+                alert('Gagal mengajukan peminjaman');
+                submitBtn.disabled = false;
             }
         });
 

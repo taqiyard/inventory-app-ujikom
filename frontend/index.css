@@ -162,4 +162,12 @@ body {
     border-color: var(--color-primary);
     color: var(--color-text-main);
     box-shadow: 0 0 0 0.25rem rgba(79, 195, 247, 0.25);
+<<<<<<< HEAD
+=======
+}
+
+::placeholder {
+    color: #9E9E9E !important;
+    opacity: 1;
+>>>>>>> d0f8213 (retrieving backend)
 }
