@@ -171,7 +171,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="index.html">
+            <a class="navbar-brand fw-bold" href="/dashboard">
                 <i class="bi bi-inbox"></i> Inventaris Kantor
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -180,7 +180,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="profil.html">
+                        <a class="nav-link" href="/profil">
                             <i class="bi bi-person"></i> Profil
                         </a>
                     </li>
@@ -198,11 +198,11 @@
         <div class="row">
             <div class="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-                    <li><a href="barang.html"><i class="bi bi-box"></i> Manajemen Barang</a></li>
-                    <li><a href="peminjaman.html"><i class="bi bi-arrow-left-right"></i> Peminjaman Barang</a></li>
-                    <li><a href="laporan.html"><i class="bi bi-bar-chart"></i> Laporan</a></li>
-                    <li><a href="log-aktivitas.html" class="active"><i class="bi bi-clock-history"></i> Log Aktivitas</a></li>
+                    <li><a href="/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li><a href="/barang"><i class="bi bi-box"></i> Manajemen Barang</a></li>
+                    <li><a href="/peminjaman"><i class="bi bi-arrow-left-right"></i> Peminjaman Barang</a></li>
+                    <li><a href="/laporan"><i class="bi bi-bar-chart"></i> Laporan</a></li>
+                    <li><a href="/log-aktivitas" class="active"><i class="bi bi-clock-history"></i> Log Aktivitas</a></li>
                 </ul>
             </div>
 
@@ -235,7 +235,7 @@
 
     <script>
         const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
+        if (!token) window.location.href = '/login';
 
         async function loadLogs() {
             try {
@@ -265,7 +265,7 @@
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
 
         loadLogs();

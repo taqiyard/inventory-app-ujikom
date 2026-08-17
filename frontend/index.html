@@ -14,13 +14,13 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="index.html">
+            <a class="navbar-brand fw-bold" href="/dashboard">
                 <i class="bi bi-inbox"></i> Inventaris Kantor
             </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="profil.html"><i class="bi bi-person"></i> Profil</a>
+                        <a class="nav-link" href="/profil"><i class="bi bi-person"></i> Profil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
@@ -35,11 +35,11 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="index.html" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-                    <li id="menuBarang" style="display:none;"><a href="barang.html"><i class="bi bi-box"></i> Manajemen Barang</a></li>
-                    <li><a href="peminjaman.html"><i class="bi bi-arrow-left-right"></i> Peminjaman Barang</a></li>
-                    <li id="menuLaporan" style="display:none;"><a href="laporan.html"><i class="bi bi-bar-chart"></i> Laporan</a></li>
-                    <li id="menuLog" style="display:none;"><a href="log-aktivitas.html"><i class="bi bi-clock-history"></i> Log Aktivitas</a></li>
+                    <li><a href="/dashboard" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li id="menuBarang" style="display:none;"><a href="/barang"><i class="bi bi-box"></i> Manajemen Barang</a></li>
+                    <li><a href="/peminjaman"><i class="bi bi-arrow-left-right"></i> Peminjaman Barang</a></li>
+                    <li id="menuLaporan" style="display:none;"><a href="/laporan"><i class="bi bi-bar-chart"></i> Laporan</a></li>
+                    <li id="menuLog" style="display:none;"><a href="/log-aktivitas"><i class="bi bi-clock-history"></i> Log Aktivitas</a></li>
                 </ul>
             </div>
 
@@ -111,7 +111,7 @@
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (!token || !user) {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
 
         document.getElementById('welcomeUser').textContent = `Halo, ${user.name} (${user.role})`;
@@ -147,7 +147,7 @@
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
 
         loadStats();
