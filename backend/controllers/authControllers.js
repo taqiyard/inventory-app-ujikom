@@ -9,14 +9,14 @@ exports.login = (req, res) => {
         if (err) return res.status(500).json(err);
 
         if (results.length === 0) {
-            return res.status(401).json({ message: 'User tidak ditemukan' });
+            return res.status(401).json({ message: 'Username atau password salah' });
         }
 
         const user = results[0];
 
         // Sederhana dulu (ujikom)
         if (user.password !== password) {
-            return res.status(401).json({ message: 'Password salah' });
+            return res.status(401).json({ message: 'Username atau password salah' });
         }
 
         res.json({

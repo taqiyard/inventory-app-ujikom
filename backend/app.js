@@ -15,6 +15,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+//Frontend static middleware
+const path = require("path");
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+//Page Route
+const pageRoutes = require("./routes/pageRoutes");
+app.use("/", pageRoutes);
+
 // Auth Route
 app.post('/auth/login', authController.login);
 

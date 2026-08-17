@@ -1,3 +1,5 @@
+//unused yet
+
 const db = require('../config/db');
 const { logActivity } = require('../services/logService');
 
@@ -6,13 +8,13 @@ exports.login = (req, res) => {
 
     db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
         if (err) return res.status(500).json(err);
-        if (results.length === 0) return res.status(404).json({ message: 'User tidak ditemukan' });
+        if (results.length === 0) return res.status(404).json({ message: 'Username atau password salah' });
 
         const user = results[0];
 
         // Perbandingan password teks biasa
         if (password !== user.password) {
-            return res.status(401).json({ message: 'Password salah' });
+            return res.status(401).json({ message: 'Username atau password salah' });
         }
 
         // Mengirimkan ID user sebagai token
