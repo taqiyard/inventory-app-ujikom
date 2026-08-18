@@ -3,6 +3,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./config/db');
 
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
 const authController = require('./controllers/authController');
 const barangController = require('./controllers/barangController');
 const peminjamanController = require('./controllers/peminjamanController');
@@ -11,17 +15,17 @@ const logController = require('./controllers/logController');
 const { logActivity } = require('./services/logService'); // Impor logActivity
 const { verifyToken, authorizeRoles } = require('./config/auth');
 
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+//using routes
+const pageRoutes = require("./routes/pageRoutes");
+const barangRoutes = require("./routes/barangRoutes");
 
 //Frontend static middleware
 const path = require("path");
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 //Page Route
-const pageRoutes = require("./routes/pageRoutes");
 app.use("/", pageRoutes);
+app.use("/barang", barangRoutes);
 
 // Auth Route
 app.post('/auth/login', authController.login);
