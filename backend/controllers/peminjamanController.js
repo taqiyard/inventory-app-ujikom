@@ -49,6 +49,74 @@ exports.ajukanPeminjaman = (req, res) => {
     });
 };
 
+exports.approvePeminjaman = async(req, res) => {
+    const { id } = req.params;
+
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const [details] = await connection.query(
+            `SELECT barang_id, jumlah
+             FROM detail_peminjaman
+             WHERE peminjaman_id = ?`, [id]
+        );
+
+        for (const d of details) {
+            await connection.query(
+                `UPDATE barang
+                 SET jumlah_tersedia = jumlah_tersedia - ?
+                 WHERE id = ?`, [d.jumlah, d.barang_id]
+            );
+        }
+
+        await connection.commit();
+
+        const [result] = await db.query(
+            'SELECT user_id FROM peminjaman WHERE id = ?', [id]
+        );
+
+        if (result.length > 0) {
+            logActivity(
+                result[0].user_id,
+                `Peminjaman (ID: ${id}) disetujui`
+            );
+        }
+
+        res.json({
+            message: "Peminjaman disetujui"
+        });
+
+    } catch (error) {
+        await connection.rollback();
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Gagal menyetujui peminjaman"
+        });
+
+    } finally {
+        connection.release();
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//pakai callback (error)
 exports.approvePeminjaman = (req, res) => {
     const { id } = req.params;
 
@@ -132,3 +200,5 @@ exports.tolakPeminjaman = (req, res) => {
         res.json({ message: 'Peminjaman ditolak' });
     });
 };
+
+*/

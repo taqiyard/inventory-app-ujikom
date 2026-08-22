@@ -1,12 +1,12 @@
 const db = require('../config/db');
 
 // LOGIN
-exports.login = (req, res) => {
-    const { email, password } = req.body;
+exports.login = async(req, res) => {
 
-    const query = 'SELECT * FROM users WHERE email = ?';
-    db.query(query, [email], (err, results) => {
-        if (err) return res.status(500).json(err);
+    try {
+        const { email, password } = req.body;
+        const query = 'SELECT * FROM users WHERE email = ?';
+        const [results] = await db.query(query, [email]);
 
         if (results.length === 0) {
             return res.status(401).json({ message: 'Username atau password salah' });
@@ -14,12 +14,11 @@ exports.login = (req, res) => {
 
         const user = results[0];
 
-        // Sederhana dulu (ujikom)
         if (user.password !== password) {
             return res.status(401).json({ message: 'Username atau password salah' });
         }
 
-        res.json({
+        return res.json({
             message: 'Login berhasil',
             user: {
                 id: user.id,
@@ -27,5 +26,14 @@ exports.login = (req, res) => {
                 role: user.role
             }
         });
-    });
+
+
+    } catch (err) {
+        console.log("login error: ", err);
+
+        return res.status(500).json({
+            message: "Terjadi kesalahan pada server"
+        });
+    }
+
 };

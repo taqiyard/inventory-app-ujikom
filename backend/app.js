@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const authController = require('./controllers/authController');
+const authControllers = require('./controllers/authControllers');
 const barangController = require('./controllers/barangController');
 const peminjamanController = require('./controllers/peminjamanController');
 const userController = require('./controllers/userController');
@@ -17,7 +17,7 @@ const { verifyToken, authorizeRoles } = require('./config/auth');
 
 //using routes
 const pageRoutes = require("./routes/pageRoutes");
-const barangRoutes = require("./routes/barangRoutes");
+const barangRoutes = require("./routes/barangRoutes"); //still unused
 
 //Frontend static middleware
 const path = require("path");
@@ -28,7 +28,7 @@ app.use("/", pageRoutes);
 app.use("/barang", barangRoutes);
 
 // Auth Route
-app.post('/auth/login', authController.login);
+app.post('/auth/login', authControllers.login);
 
 // Barang Routes
 app.get('/api/barang', verifyToken, barangController.getAllBarang);
@@ -40,8 +40,8 @@ app.delete('/api/barang/:id', verifyToken, authorizeRoles('admin', 'petugas'), b
 app.get('/api/peminjaman', verifyToken, peminjamanController.getAllPeminjaman);
 app.post('/api/peminjaman', verifyToken, peminjamanController.ajukanPeminjaman);
 app.put('/api/peminjaman/:id/approve', verifyToken, authorizeRoles('admin', 'petugas'), peminjamanController.approvePeminjaman);
-app.put('/api/peminjaman/:id/tolak', verifyToken, authorizeRoles('admin', 'petugas'), peminjamanController.tolakPeminjaman);
-app.put('/api/peminjaman/:id/kembalikan', verifyToken, peminjamanController.kembalikanBarang);
+//app.put('/api/peminjaman/:id/tolak', verifyToken, authorizeRoles('admin', 'petugas'), peminjamanController.tolakPeminjaman);
+//app.put('/api/peminjaman/:id/kembalikan', verifyToken, peminjamanController.kembalikanBarang);
 
 // Stats & Logs (Stubs untuk melengkapi permintaan frontend)
 app.get('/api/stats', verifyToken, (req, res) => {

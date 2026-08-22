@@ -1,19 +1,36 @@
 const db = require('./db');
 
-exports.verifyToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const userId = authHeader && authHeader.split(' ')[1];
+exports.verifyToken = async(req, res, next) => {
 
-    if (!userId) return res.status(401).json({ message: 'Akses ditolak, silahkan login kembali' });
+    try {
 
-    // Cari user berdasarkan ID (Token sederhana adalah ID User)
-    db.query('SELECT * FROM users WHERE id = ?', [userId], (err, results) => {
-        if (err || results.length === 0) {
-            return res.status(403).json({ message: 'Sesi tidak valid' });
+        const authHeader = req.headers['authorization'];
+        const userId = authHeader && authHeader.split(' ')[1];
+        const query = 'SELECT * FROM users WHERE id = ?';
+
+        if (!userId) return res.status(401).json({ message: 'Akses ditolak, silahkan login kembali' });
+
+        // Cari user berdasarkan ID (Token sederhana adalah ID User)
+        const [results] = await db.query(query, [userId]);
+        if (results.length === 0) {
+            return res.status(401).json({
+                message: 'User tidak ditemukan'
+            });
         }
         req.user = results[0];
         next();
-    });
+
+    } catch (err) {
+        console.log(err);
+
+        res.status(500).json({
+            message: "error memanggil token"
+        });
+    };
+
+
+
+
 };
 
 exports.authorizeRoles = (...roles) => {
