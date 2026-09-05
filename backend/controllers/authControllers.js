@@ -1,4 +1,11 @@
 const db = require('../config/db');
+const jwt = require('jsonwebtoken');
+
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+    throw new Error('JWT_SECRET belum dikonfigurasi');
+}
 
 // LOGIN
 exports.login = async(req, res) => {
@@ -18,8 +25,13 @@ exports.login = async(req, res) => {
             return res.status(401).json({ message: 'Username atau password salah' });
         }
 
+        const token = jwt.sign({ role: user.role },
+            jwtSecret, { subject: String(user.id), expiresIn: '1h' }
+        );
+
         return res.json({
             message: 'Login berhasil',
+            token,
             user: {
                 id: user.id,
                 name: user.name,

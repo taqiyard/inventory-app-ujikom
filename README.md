@@ -8,6 +8,16 @@ Aplikasi dibangun menggunakan:
 - Database: MySQL
 - Frontend: HTML, CSS, JavaScript (Vanilla) + Bootstrap
 
+## Menjalankan Backend
+
+1. Salin `.env.example` menjadi `.env` dan isi `JWT_SECRET` dengan secret acak yang panjang.
+2. Pastikan database `inventaris_ujikom` sudah dibuat dari `db.sql`.
+3. Jalankan `npm install`, lalu `npm run dev` atau `npm start`.
+
+Login tersedia di `POST /auth/login` dengan body JSON `{ "email": "...", "password": "..." }`.
+Respons login mengandung JWT yang berlaku selama 1 jam. Kirim token tersebut untuk endpoint terlindungi:
+`Authorization: Bearer <token>`.
+
 ---
 
 ## Role Pengguna
